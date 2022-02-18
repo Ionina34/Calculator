@@ -2,10 +2,13 @@
 #include<Windows.h>
 #include"resource.h"
 
-CONST UINT WINDOW_WIDTH = 260;
-CONST UINT WINDOW_HEIGHT = 350;
-UINT i_btn_size = 50;  //Размер кнопки
-UINT interval = 2;    //Интервал между кнопками
+CONST UINT start_x = 10;
+CONST UINT start_y = 70;
+CONST UINT i_btn_size = 50;  //Размер кнопки
+CONST UINT interval = 2;    //Интервал между кнопками
+
+CONST UINT WINDOW_WIDTH = 293;//(i_btn_size+interval)*5 + start_x*3;
+CONST UINT WINDOW_HEIGHT = 324;
 
 CONST CHAR g_szClassName[] = "Calculator";
 
@@ -65,12 +68,17 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrewInst, LPSTR lmCmdLine, IN
 	return msg.wParam;
 }
 
+//#define DZ
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_CREATE:
 	{
+		//////////////////////////////////////////////////////////////////
+		//////////////////    Create display    //////////////////////////
+		//////////////////////////////////////////////////////////////////
 		HWND hEdit = CreateWindowEx
 		(
 			NULL,
@@ -89,8 +97,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//////////////////    Create buttons    //////////////////////////
 		//////////////////////////////////////////////////////////////////
 
-		UINT start_x = 10;
-		UINT start_y = 70;
+		/*UINT start_x = 10;
+		UINT start_y = 70;*/
 		//UINT i_btn_size = 50;  //Размер кнопки
 		//UINT interval = 2;    //Интервал между кнопками
 
@@ -115,14 +123,73 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				digit++;
 			}
 		}
+		//                              Zero & Point:
+		CreateWindowEx
+		(
+			NULL, "Button", "0", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			start_x, start_y + (i_btn_size + interval) * 3,
+			i_btn_size * 2 + interval, i_btn_size,
+			hwnd, (HMENU)(IDC_BTN_0), GetModuleHandle(NULL), NULL
+		);
+		CreateWindowEx
+		(
+			NULL, "Button", ".", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			start_x + (i_btn_size + interval) * 2, start_y + (i_btn_size + interval) * 3,
+			i_btn_size, i_btn_size,
+			hwnd, (HMENU)(IDC_BTN_POINT), GetModuleHandle(NULL), NULL
+		);
+
+		//                               Operation:
+		CreateWindowEx
+		(
+			NULL, "Button", "/", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			start_x + (i_btn_size + interval) * 3, start_y + (i_btn_size + interval) * 0, i_btn_size, i_btn_size,
+			hwnd, (HMENU)(IDC_BTN_DIVISION), GetModuleHandle(NULL), NULL
+		);
+		CreateWindowEx
+		(
+			NULL, "Button", "*", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			start_x + (i_btn_size + interval) * 3, start_y + (i_btn_size + interval) * 1, i_btn_size, i_btn_size,
+			hwnd, (HMENU)(IDC_BTN_MULTIPLYPLICATION), GetModuleHandle(NULL), NULL
+		);
+		CreateWindowEx
+		(
+			NULL, "Button", "-", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			start_x + (i_btn_size + interval) * 3, start_y + (i_btn_size + interval) * 2, i_btn_size, i_btn_size,
+			hwnd, (HMENU)(IDC_BTN_MINUS), GetModuleHandle(NULL), NULL
+		);
+		CreateWindowEx
+		(
+			NULL, "Button", "+", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			start_x + (i_btn_size + interval) * 3, start_y + (i_btn_size + interval) * 3, i_btn_size, i_btn_size,
+			hwnd, (HMENU)(IDC_BTN_PLUS), GetModuleHandle(NULL), NULL
+		);
+
+		CreateWindowEx
+		(
+			NULL,"Button","C",WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON,
+			start_x+(i_btn_size+interval)*4,start_y,
+			i_btn_size,i_btn_size*2+interval,
+			hwnd,(HMENU)(IDC_BTN_CLEAR),GetModuleHandle(NULL),NULL
+		);
+		CreateWindowEx
+		(
+			NULL,"Button","=",WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON,
+			start_x+(i_btn_size+interval)*4,start_y+(i_btn_size+interval)*2,
+			i_btn_size,i_btn_size*2+interval,
+			hwnd,(HMENU)(IDC_BTN_EQUAL),GetModuleHandle(NULL),NULL
+		);
+
 	}
 	break;
 	case WM_COMMAND:
+
+#ifdef DZ
 		if (HIWORD(wParam) == BN_CLICKED)
 		{
-				CONST INT SIZE = 256;
-				CHAR buffer[SIZE]{};
-				SendMessage(GetDlgItem(hwnd, IDC_EDIT), WM_GETTEXT, SIZE, (LPARAM)buffer);
+			CONST INT SIZE = 256;
+			CHAR buffer[SIZE]{};
+			SendMessage(GetDlgItem(hwnd, IDC_EDIT), WM_GETTEXT, SIZE, (LPARAM)buffer);
 			switch (LOWORD(wParam))
 			{
 			case IDC_BTN_1:
@@ -153,11 +220,24 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			case IDC_BTN_9:
 				strcat(buffer, "9");
 				break;
+	}
+			SendMessage(GetDlgItem(hwnd, IDC_EDIT), WM_SETTEXT, 0, (LPARAM)buffer);
+	}
+#endif // DZ
+		{
+			if (LOWORD(wParam) >= IDC_BTN_0 && LOWORD(wParam) <= IDC_BTN_9)
+			{
+				CONST INT SIZE = 256;
+				CHAR sz_buffer[SIZE]{};
+				HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
+				SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+				CHAR sz_digit[2] = {};
+				sz_digit[0] = LOWORD(wParam) - 1000 + 48;
+				strcat(sz_buffer, sz_digit);
+				SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
 			}
-				SendMessage(GetDlgItem(hwnd, IDC_EDIT),WM_SETTEXT, 0, (LPARAM)buffer);
 		}
-
-			break;
+		break;
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
 		break;
@@ -165,6 +245,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 	default:return DefWindowProc(hwnd, uMsg, wParam, lParam);
-	}
+}
 	return 0;
 }

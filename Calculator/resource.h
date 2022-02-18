@@ -18,13 +18,13 @@
 
 #define IDC_EDIT      1010
 
-#define IDC_BTN_PLUS                  1011
-#define IDC_BTN_MINUS                 1012
-#define IDC_BTN_MULTIPLYPLICATION     1013
-#define IDC_BTN_DIVISION              1014
+#define IDC_BTN_DIVISION             1011
+#define IDC_BTN_MULTIPLYPLICATION    1012
+#define IDC_BTN_MINUS                1013
+#define IDC_BTN_PLUS                 1014
 
 # define IDC_BTN_EQUAL    1015
-# define IDC_BTN_CLEAR   1015
+# define IDC_BTN_CLEAR    1016
 
 // Next default values for new objects
 // 
