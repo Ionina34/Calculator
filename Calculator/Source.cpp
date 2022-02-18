@@ -117,7 +117,46 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	break;
-	case WM_COMMAND:break;
+	case WM_COMMAND:
+		if (HIWORD(wParam) == BN_CLICKED)
+		{
+				CONST INT SIZE = 256;
+				CHAR buffer[SIZE]{};
+				SendMessage(GetDlgItem(hwnd, IDC_EDIT), WM_GETTEXT, SIZE, (LPARAM)buffer);
+			switch (LOWORD(wParam))
+			{
+			case IDC_BTN_1:
+				strcat(buffer, "1");
+				break;
+			case IDC_BTN_2:
+				strcat(buffer, "2");
+				break;
+			case IDC_BTN_3:
+				strcat(buffer, "3");
+				break;
+			case IDC_BTN_4:
+				strcat(buffer, "4");
+				break;
+			case IDC_BTN_5:
+				strcat(buffer, "5");
+				break;
+			case IDC_BTN_6:
+				strcat(buffer, "6");
+				break;
+			case IDC_BTN_7:
+				strcat(buffer, "7");
+				break;
+			case IDC_BTN_8:
+				strcat(buffer, "8");
+				break;
+			case IDC_BTN_9:
+				strcat(buffer, "9");
+				break;
+			}
+				SendMessage(GetDlgItem(hwnd, IDC_EDIT),WM_SETTEXT, 0, (LPARAM)buffer);
+		}
+
+			break;
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
 		break;
