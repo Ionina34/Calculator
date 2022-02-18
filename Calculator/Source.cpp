@@ -126,6 +126,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			switch (LOWORD(wParam))
 			{
 			case IDC_BTN_1:
+				//strcmp(buffer, "1");
 				strcat(buffer, "1");
 				break;
 			case IDC_BTN_2:
