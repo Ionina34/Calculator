@@ -276,8 +276,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				case IDC_BTN_DIVISION:a /= b; break;
 				default:a = b;
 				}
-				//sprintf(sz_buffer, "%f", a);
-				sprintf(sz_buffer, "%g", a);
+				sprintf(sz_buffer, "%f", a);
+				//sprintf(sz_buffer, "%g", a);
 				SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
 				s = 0;
 				strted = TRUE;
