@@ -233,6 +233,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 #endif // DZ
 		{
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE]{};
+			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
 			if (LOWORD(wParam) >= IDC_BTN_0 && LOWORD(wParam) <= IDC_BTN_9 || LOWORD(wParam) == IDC_BTN_POINT)
 			{
 				if (strted)
@@ -240,16 +243,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					SendMessage(GetDlgItem(hwnd, IDC_EDIT), WM_SETTEXT, 0, (LPARAM)"");
 					strted = FALSE;
 				}
-				CONST INT SIZE = 256;
-				CHAR sz_buffer[SIZE]{};
-				HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
 				SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
 				if (LOWORD(wParam) == IDC_BTN_POINT && strchr(sz_buffer, '.'))break;
 				CHAR sz_digit[2] = {};
 				sz_digit[0] = LOWORD(wParam) - 1000 + 48;
 				strcat(sz_buffer, sz_digit);
 				SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
-
 			}
 			if (LOWORD(wParam) == IDC_BTN_CLEAR)
 			{
@@ -260,9 +259,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			if (LOWORD(wParam) >= IDC_BTN_DIVISION && LOWORD(wParam) <= IDC_BTN_PLUS)
 			{
-				SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BTN_EQUAL), 0);
-				CONST INT SIZE = 256;
-				CHAR sz_buffer[SIZE]{};
 				SendMessage(GetDlgItem(hwnd, IDC_EDIT), WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
 				a = strtod(sz_buffer, NULL);
 				s = LOWORD(wParam);
@@ -270,11 +266,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			if (LOWORD(wParam) == IDC_BTN_EQUAL)
 			{
-				CONST INT SIZE = 256;
-				CHAR sz_buffer[SIZE]{};
-				HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
 				SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
-				b = strtod(sz_buffer,NULL);
+				b = strtod(sz_buffer, NULL);
 				switch (s)
 				{
 				case IDC_BTN_PLUS:a += b; break;
@@ -283,7 +276,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				case IDC_BTN_DIVISION:a /= b; break;
 				default:a = b;
 				}
-				sprintf(sz_buffer, "%f", a);
+				//sprintf(sz_buffer, "%f", a);
+				sprintf(sz_buffer, "%g", a);
 				SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
 				s = 0;
 				strted = TRUE;
